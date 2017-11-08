@@ -78,12 +78,12 @@ if[ $? != 0 ];then
 fi
 
 #link to mysql
-/usr/local/mysql/bin/mysqladmin -u root password 'haoyun1996'
+/usr/local/mysql/bin/mysqladmin -u root password '123456'
 
 HOSTNAME="localhost"
 PORT="3306"
 USERNAME="root"
-PASSWORD="haoyun1996"
+PASSWORD="123456"
 DBNAME="myapp"
 
 creat_db_sql="create database IF NOT EXITS ${DBNAME}"

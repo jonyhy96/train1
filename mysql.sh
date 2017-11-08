@@ -3,6 +3,11 @@
 #mysql source install shell#
 ############################
 
+#set mysql file
+prefix='/usr/local/mysql'  
+#set data file
+datadir='/data/mysql/data'
+
 #download tools and libary
 yum -y install gcc wget gcc-c++ make autoconf libtool-ltdl-devel gd-devel freetype-devel libxml2-devel libjpeg-devel libpng-devel openssl-devel curl-devel bison patch unzip libmcrypt-devel libmhash-devel ncurses-devel sudo bzip2 flex libaio-devel
 
@@ -28,7 +33,7 @@ fi
 cd mysql-5.7.10
 
 #compile and install mysql
-cmake -DCMAKE_INSTALL_PREFIX=/usr/local/webserver/mysql -DMYSQL_DATADIR=/data/mysql/data  -DDOWNLOAD_BOOST=1 -DWITH_BOOST=/usr/local/boost
+cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DMYSQL_DATADIR=/data/mysql/data
 make && make install
 
 #create mysql account
@@ -36,49 +41,53 @@ make && make install
 /usr/sbin/useradd -g mysql mysql
 
 #make binlog and database file then powered account mysql
-mkdir -p /usr/local/webserver/mysql/binlog /www/data_mysql
-chown mysql:mysql /usr/local/webserver/mysql/binlog/ /www/data_mysql/
+mkdir -p /usr/local/mysql/etc /var/run/mysqld/ /var/log/mysqld/
+chown mysql:mysql /usr/local/mysql/etc /data/mysql/data /var/run/mysqld/ /var/log/mysqld/ /usr/local/mysql
 
 #create my.cnf configure file
-cat << EOF >/etc/my.cnf
+cat << EOF >/usr/local/mysql/etc/my.cnf
 [mysqld]
 server-id = 1
-basedir=/usr/local/webserver/mysql/
+basedir=/usr/local/mysql
 datadir=/data/mysql/data
-socket=/tmp/mysql.sock
-pid-file=/usr/local/webserver/mysql/mysql.pid
+socket=/var/run/mysqld/mysql.sock
+pid-file=/var/run/mysqld/mysql.pid
 port=3306
 user=mysql
 [mysqld_safe]
-log-error=/usr/local/webserver/mysql/mysql_error.log
+log-error=/var/log/mysqld/mysql-error.log
 [client] 
-socket=/tmp/mysql.sock
+socket=/var/run/mysqld/mysql.sock 
 EOF
 
+
 #init mysql database
-/usr/local/webserver/mysql/scripts/mysql_install_db --defaults-file=/etc/my.cnf --user=mysql >> /root/log.txt
+/usr/local/mysql/bin/mysqld --initialize-insecure --user=mysql   --basedir=$prefix  --datadir=$datadir
 
 #create start onboot tab
-cd /usr/local/webserver/mysql/
+cd /usr/local/mysql/
 cp support-files/mysql.server /etc/rc.d/init.d/mysqld 
 chkconfig --add mysqld 
 chkconfig --level 35 mysqld on
 
 #start mysql service
 service mysqld start
-
+if[ $? != 0 ];then
+	mv /etc/my.cnf /etc/my.cnf.back
+fi
+service mysqld start
 #link to mysql
-/usr/local/webserver/mysql/bin/mysql -u root -p 'haoyun1996'
+/usr/local/mysql/bin/mysqladmin -u root password 'haoyun1996'
 
 HOSTNAME="localhost"
 PORT="3306"
 USERNAME="root"
-PASSWORD="123456"
+PASSWORD="haoyun1996"
 DBNAME="myapp"
 
 creat_db_sql="create database IF NOT EXITS ${DBNAME}"
 
-/usr/local/webserver/mysql/bin/mysql -h ${HOSTNAME} -P ${PORT} -u ${USERNAME} -p ${PASSWORD} -e "${create_db_sql}"
+/usr/local/mysql/bin/mysql -h ${HOSTNAME} -P ${PORT} -u ${USERNAME} -p ${PASSWORD} -e "${create_db_sql}"
 if [ $? == 0 ];then
-    echo "create yes"
+    echo "Success"
 fi

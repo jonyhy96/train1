@@ -74,8 +74,9 @@ chkconfig --level 35 mysqld on
 service mysqld start
 if[ $? != 0 ];then
 	mv /etc/my.cnf /etc/my.cnf.back
+	service mysqld start
 fi
-service mysqld start
+
 #link to mysql
 /usr/local/mysql/bin/mysqladmin -u root password 'haoyun1996'
 

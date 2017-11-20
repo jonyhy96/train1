@@ -22,6 +22,14 @@ cd cmake-3.1.1
 ./bootstrap
 
 make && make install
+cd ..
+#download boost
+wget http://sourceforge.net/projects/boost/files/boost/1.59.0/boost_1_59_0.tar.gz
+tar zxvf  boost_1_59_0.tar.gz
+cd boost_1_59_0
+./bootstrap.sh --prefix=/etc/boost
+./b2 install --with=all
+cd ..
 
 #download mysql sourcecode
 wget https://cdn.mysql.com/archives/mysql-5.7/mysql-5.7.10.tar.gz
@@ -32,8 +40,9 @@ if [ -e " ./mysql-5.7.10" ];then
 fi
 cd mysql-5.7.10
 
+
 #compile and install mysql
-cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DMYSQL_DATADIR=/data/mysql/data
+cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DMYSQL_DATADIR=/data/mysql/data 
 make && make install
 
 #create mysql account

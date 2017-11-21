@@ -4,7 +4,7 @@
 ############################
 
 #set mysql file
-prefix='/usr/local/mysql'  
+prefix='/usr/local/mysql'
 #set data file
 datadir='/data/mysql/data'
 

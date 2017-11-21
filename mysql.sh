@@ -4,9 +4,9 @@
 ############################
 
 #set mysql file
-prefix="/usr/local/mysql"
+prefix='/usr/local/mysql'
 #set data file
-datadir="/data/mysql/data"
+datadir='/data/mysql/data'
 
 #download tools and libary
 yum -y install gcc wget gcc-c++ make autoconf libtool-ltdl-devel gd-devel freetype-devel libxml2-devel libjpeg-devel libpng-devel openssl-devel curl-devel bison patch unzip libmcrypt-devel libmhash-devel ncurses-devel sudo bzip2 flex libaio-devel

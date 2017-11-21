@@ -3,4 +3,5 @@
 PS:you should install wget first,within centos you can use `yum -y install wget` to install wget
 > *  git clone https://github.com/jonyhy96/train1/blob/master/mysql.sh
 > *  sh mysql.sh
+------
 作者 [@jonyhy](https://weibo.com/u/5991880963)
